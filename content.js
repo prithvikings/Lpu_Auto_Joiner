@@ -1,8 +1,7 @@
 window.addEventListener('load', () => {
-    // Check if the extension is currently enabled before injecting into the webpage
+    
     chrome.storage.local.get(['isExtensionEnabled', 'username', 'password'], (data) => {
         
-        // If disabled, stop everything
         if (data.isExtensionEnabled === false) return;
 
         const currentUrl = window.location.href;

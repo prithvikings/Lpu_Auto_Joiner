@@ -4,10 +4,8 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === "scheduleChecker") {
-        // Fetch the kill switch state alongside everything else
         chrome.storage.local.get(['classDays', 'classTime', 'lastTriggered', 'isExtensionEnabled'], (data) => {
             
-            // THE KILL SWITCH LOGIC: If disabled, stop completely.
             if (data.isExtensionEnabled === false) {
                 console.log("Auto-Joiner is disabled via Kill Switch.");
                 return;
@@ -33,7 +31,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
                         
                         chrome.notifications.create({
                             type: 'basic',
-                            iconUrl: 'icon.png', 
+                            logoUrl: 'logo.png', 
                             title: 'LPU Auto Joiner',
                             message: 'Time for class! Opening the portal now...',
                             priority: 2
