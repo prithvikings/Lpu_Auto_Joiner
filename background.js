@@ -5,7 +5,13 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "scheduleChecker") {
     chrome.storage.local.get(
-      ["classDays", "classTime", "lastTriggered", "isExtensionEnabled"],
+      [
+        "classDays",
+        "classTime",
+        "lastTriggered",
+        "isExtensionEnabled",
+        "userEmail",
+      ],
       (data) => {
         if (data.isExtensionEnabled === false) {
           console.log("Auto-Joiner is disabled via Kill Switch.");
@@ -43,6 +49,10 @@ chrome.alarms.onAlarm.addListener((alarm) => {
               });
 
               chrome.tabs.create({ url: "https://myclass.lpu.in/" });
+
+              if (data.userEmail) {
+                sendEmail(data.userEmail, data.classTime);
+              }
             });
           }
         }
@@ -50,3 +60,34 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     );
   }
 });
+
+function sendEmail(toEmail, classTime) {
+  // You will get these keys from your EmailJS dashboard
+  const serviceID = "service_vfzyy46";
+  const templateID = "template_s1bzgvt";
+  const publicKey = "rhGbPW24FXeTaWsmN";
+
+  fetch("https://api.emailjs.com/api/v1.0/email/send", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      service_id: serviceID,
+      template_id: templateID,
+      user_id: publicKey,
+      template_params: {
+        to_email: toEmail,
+        class_time: classTime,
+        message:
+          "Your LPU class is starting now. The Auto-Joiner has automatically opened the portal on your computer!",
+      },
+    }),
+  })
+    .then((response) => {
+      if (response.ok)
+        console.log("Class notification email sent successfully!");
+      else console.error("Failed to send email", response);
+    })
+    .catch((error) => console.error("Error sending email:", error));
+}
