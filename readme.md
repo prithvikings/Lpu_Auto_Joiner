@@ -10,6 +10,7 @@ A Chrome extension that **automatically logs you into** the LPU (Lovely Professi
 - **🔐 Auto-Login** — Fills in your credentials and logs you in without any manual input.
 - **📅 Day Selection** — Choose specific days of the week when classes are scheduled.
 - **🔔 Notifications** — Sends a browser notification when it's time for class.
+- **📧 Email Notifications** — Optionally receive an email alert when your class is about to start (powered by EmailJS).
 - **🎨 Dark / Light Theme** — Toggle between dark and light mode with a single click.
 - **🛑 Kill Switch** — Quickly enable or disable the extension without uninstalling it.
 - **💾 Persistent Settings** — All your settings are saved locally and restored automatically.
@@ -62,13 +63,16 @@ A Chrome extension that **automatically logs you into** the LPU (Lovely Professi
 
 5. **Set Class Time** — Use the time picker to set when your class starts.
 
-6. **Click "Save Settings"** — A confirmation message will appear.
+6. **Add Notification Email (Optional)** — Enter your email address to receive an email alert when your class is about to start.
+
+7. **Click "Save Settings"** — A confirmation message will appear.
 
 That's it! The extension will now:
 
 - Check every minute if it's time for class.
 - Open the LPU portal automatically within a 3-minute window of your scheduled time.
 - Log you in and navigate to the meetings page.
+- Send you an email notification if you've provided an email address.
 
 ---
 
@@ -96,11 +100,12 @@ The extension operates through three main components:
 - Creates a **Chrome Alarm** (`scheduleChecker`) that fires every **1 minute**.
 - On each alarm tick, it:
   - Checks if the extension is enabled (kill switch).
-  - Retrieves the saved schedule (days + time) from `chrome.storage.local`.
+  - Retrieves the saved schedule (days + time + email) from `chrome.storage.local`.
   - Compares the current day and time against the saved schedule.
   - If the current time is within a **3-minute window** of the scheduled class time and on a matching day, it:
     - Sends a **browser notification** ("Time for class!").
     - Opens a **new tab** to `https://myclass.lpu.in/`.
+    - Sends an **email notification** via EmailJS (if an email address is configured).
   - Uses a `lastTriggered` key to prevent duplicate triggers on the same day/time.
 
 ### 2. Content Script (`content.js`)
@@ -121,6 +126,7 @@ The extension operates through three main components:
   - **Toggle switch** to enable/disable the extension.
   - **Text inputs** for username and password.
   - **Day picker** with circular pill buttons for selecting active days.
+  - **Email input** (optional) for receiving email notifications.
   - **Time picker** for setting class time.
   - **Save button** that persists all settings to `chrome.storage.local`.
 - **Theme toggle** (sun/moon icon) to switch between light and dark mode.
@@ -143,8 +149,9 @@ The extension operates through three main components:
 
 ## 🛡️ Privacy & Security
 
-- **All data is stored locally** on your machine using `chrome.storage.local`. Nothing is sent to any external server.
+- **All data is stored locally** on your machine using `chrome.storage.local`.
 - Your credentials are only used to auto-fill the login form on `myclass.lpu.in` and are never transmitted elsewhere.
+- If you provide a notification email, it is only used to send class reminders via the **EmailJS** service. No other data is shared.
 - The extension only activates on LPU and CodeTantra domains.
 
 ---
@@ -155,6 +162,7 @@ The extension operates through three main components:
 - **Vanilla JavaScript** — No frameworks or dependencies
 - **HTML & CSS** — Clean, responsive popup UI with CSS custom properties
 - **Google Fonts (Poppins)** — Modern typography
+- **EmailJS** — Email delivery service for class notifications
 
 ---
 
@@ -165,6 +173,7 @@ The extension operates through three main components:
 | Extension doesn't open the portal | Make sure the toggle is **enabled** and you've selected the correct **days** and **time**.                                                                                                              |
 | Auto-login doesn't work           | Verify your **username** and **password** are correct. The extension looks for specific input field selectors on the LPU page — if LPU changes their login page structure, selectors may need updating. |
 | Notification not showing          | Ensure Chrome notifications are **allowed** in your system settings.                                                                                                                                    |
+| Email notification not received   | Double-check the email address you entered. Also check your **spam/junk** folder. The email is sent via EmailJS and may take a moment to arrive.                                                        |
 | Triggers multiple times           | This shouldn't happen due to the `lastTriggered` guard, but try reloading the extension from `chrome://extensions/`.                                                                                    |
 | Theme doesn't persist             | Make sure the extension has `storage` permission. Reload the extension if needed.                                                                                                                       |
 
