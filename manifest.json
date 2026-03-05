@@ -2,21 +2,14 @@
   "manifest_version": 3,
   "name": "LPU Auto Joiner",
   "version": "1.0",
+  "description": "Automatically logs into the LPU student portal and joins your scheduled classes on time. Set your credentials, pick your days and time, and never miss a class again.",
   "icons": {
     "16": "logo.png",
     "48": "logo.png",
     "128": "logo.png"
   },
-  "permissions": [
-    "alarms",
-    "storage",
-    "tabs",
-    "notifications"
-  ],
-  "host_permissions": [
-    "*://*.lpu.in/*",
-    "*://*.codetantra.com/*"
-  ],
+  "permissions": ["alarms", "storage", "tabs", "notifications"],
+  "host_permissions": ["*://*.lpu.in/*", "*://*.codetantra.com/*"],
   "action": {
     "default_popup": "popup.html"
   },
@@ -25,13 +18,8 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "*://*.lpu.in/*",
-        "*://*.codetantra.com/*"
-      ],
-      "js": [
-        "content.js"
-      ]
+      "matches": ["*://*.lpu.in/*", "*://*.codetantra.com/*"],
+      "js": ["content.js"]
     }
   ]
 }
