@@ -1,217 +1,362 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
-        :root {
-            --bg-main: #ffffff;
-            --text-main: #24272a;
-            --text-secondary: #535a61;
-            --border-color: #d6d9dc;
-            --input-bg: #ffffff;
-            --primary-btn: #f6851b;
-            --primary-btn-hover: #e2761b;
-            --pill-bg: #f2f4f6;
-            --pill-text: #24272a;
-            --accent-orange: #f6851b;
-            --accent-orange-focus: rgba(246, 133, 27, 0.2);
-            --logo-color: #535a61;
-        }
+      :root {
+        --bg-main: #ffffff;
+        --text-main: #24272a;
+        --text-secondary: #535a61;
+        --border-color: #d6d9dc;
+        --input-bg: #ffffff;
+        --primary-btn: #f6851b;
+        --primary-btn-hover: #e2761b;
+        --pill-bg: #f2f4f6;
+        --pill-text: #24272a;
+        --accent-orange: #f6851b;
+        --accent-orange-focus: rgba(246, 133, 27, 0.2);
+        --logo-color: #535a61;
+      }
 
-        body[data-theme="dark"] {
-            --bg-main: #24272a;
-            --text-main: #ffffff;
-            --text-secondary: #bbc0c5;
-            --border-color: #3b4046;
-            --input-bg: #14151a;
-            --primary-btn: #f6851b;
-            --primary-btn-hover: #e2761b;
-            --pill-bg: #14151a;
-            --pill-text: #ffffff;
-            --logo-color: #bbc0c5;
-        }
+      body[data-theme="dark"] {
+        --bg-main: #24272a;
+        --text-main: #ffffff;
+        --text-secondary: #bbc0c5;
+        --border-color: #3b4046;
+        --input-bg: #14151a;
+        --primary-btn: #f6851b;
+        --primary-btn-hover: #e2761b;
+        --pill-bg: #14151a;
+        --pill-text: #ffffff;
+        --logo-color: #bbc0c5;
+      }
 
-        body[data-theme="dark"] .logo-container img {
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
+      body[data-theme="dark"] .logo-container img {
+        padding: 4px 8px;
+        border-radius: 6px;
+      }
 
-        html, body {
-            width: 360px;
-            margin: 0;
-            padding: 0;
-            overflow-y: hidden;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            box-sizing: border-box;
-            transition: background-color 0.3s, color 0.3s;
-        }
+      html,
+      body {
+        width: 360px;
+        margin: 0;
+        padding: 0;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        box-sizing: border-box;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
 
-        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar {
+        display: none;
+      }
 
-        .header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 24px 20px 16px;
-            border-bottom: 1px solid var(--border-color);
-            position: relative;
-        }
+      .header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 24px 20px 16px;
+        border-bottom: 1px solid var(--border-color);
+        position: relative;
+      }
 
-        .theme-toggle {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--logo-color);
-            padding: 4px;
-            display: flex;
-            border-radius: 4px;
-            transition: 0.2s;
-        }
+      .theme-toggle {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--logo-color);
+        padding: 4px;
+        display: flex;
+        border-radius: 4px;
+        transition: 0.2s;
+      }
 
-        .theme-toggle:hover { background-color: var(--pill-bg); }
-        .theme-toggle svg { width: 20px; height: 20px; }
+      .theme-toggle:hover {
+        background-color: var(--pill-bg);
+      }
+      .theme-toggle svg {
+        width: 20px;
+        height: 20px;
+      }
 
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 40px;
-            margin-bottom: 12px;
-        }
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        margin-bottom: 12px;
+      }
 
-        .logo-container img {
-            max-width: 140px;
-            max-height: 100%;
-            object-fit: contain;
-        }
+      .logo-container img {
+        max-width: 140px;
+        max-height: 100%;
+        object-fit: contain;
+      }
 
-        h3 { margin: 0; font-size: 18px; font-weight: 600; }
-        .container { padding: 20px; }
-        .form-group { margin-bottom: 20px; }
-        label.field-label { font-size: 14px; font-weight: 500; color: var(--text-main); margin-bottom: 8px; display: block; }
+      h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .container {
+        padding: 20px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label.field-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-main);
+        margin-bottom: 8px;
+        display: block;
+      }
 
-        input[type="text"], input[type="password"], input[type="time"] {
-            width: 100%;
-            padding: 12px 16px;
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-size: 14px;
-            font-family: 'Poppins', sans-serif;
-            box-sizing: border-box;
-            transition: 0.2s;
-            outline: none;
-        }
+      input[type="text"],
+      input[type="password"],
+      input[type="time"] {
+        width: 100%;
+        padding: 12px 16px;
+        background-color: var(--input-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-main);
+        font-size: 14px;
+        font-family: "Poppins", sans-serif;
+        box-sizing: border-box;
+        transition: 0.2s;
+        outline: none;
+      }
 
-        input[type="time"]::-webkit-calendar-picker-indicator { cursor: pointer; transition: 0.2s; }
-        body[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1) opacity(0.8); }
-        input:focus { border-color: var(--accent-orange); box-shadow: 0 0 0 3px var(--accent-orange-focus); }
+      input[type="time"]::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      body[data-theme="dark"]
+        input[type="time"]::-webkit-calendar-picker-indicator {
+        filter: invert(1) opacity(0.8);
+      }
+      input:focus {
+        border-color: var(--accent-orange);
+        box-shadow: 0 0 0 3px var(--accent-orange-focus);
+      }
 
-        .days-container { display: flex; gap: 8px; justify-content: space-between; }
-        .day-pill input { display: none; }
-        .day-pill span {
-            display: flex; align-items: center; justify-content: center;
-            width: 38px; height: 38px;
-            background-color: var(--pill-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            color: var(--pill-text);
-            font-size: 12px; font-weight: 600;
-            cursor: pointer; transition: 0.2s; user-select: none;
-        }
-        .day-pill input:checked + span { background-color: var(--primary-btn); border-color: var(--primary-btn); color: #ffffff; }
+      .days-container {
+        display: flex;
+        gap: 8px;
+        justify-content: space-between;
+      }
+      .day-pill input {
+        display: none;
+      }
+      .day-pill span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        background-color: var(--pill-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 50%;
+        color: var(--pill-text);
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        user-select: none;
+      }
+      .day-pill input:checked + span {
+        background-color: var(--primary-btn);
+        border-color: var(--primary-btn);
+        color: #ffffff;
+      }
 
-        button.action-btn {
-            width: 100%; padding: 14px; margin-top: 10px;
-            background-color: var(--primary-btn); color: white;
-            border: none; border-radius: 100px; cursor: pointer;
-            font-size: 15px; font-weight: 600; font-family: 'Poppins', sans-serif;
-            transition: 0.2s;
-        }
-        button.action-btn:hover { background-color: var(--primary-btn-hover); }
+      button.action-btn {
+        width: 100%;
+        padding: 14px;
+        margin-top: 10px;
+        background-color: var(--primary-btn);
+        color: white;
+        border: none;
+        border-radius: 100px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        font-family: "Poppins", sans-serif;
+        transition: 0.2s;
+      }
+      button.action-btn:hover {
+        background-color: var(--primary-btn-hover);
+      }
 
-        #status { color: #28a745; font-size: 14px; text-align: center; margin-top: 16px; font-weight: 500; opacity: 0; transition: 0.3s; }
+      #status {
+        color: #28a745;
+        font-size: 14px;
+        text-align: center;
+        margin-top: 16px;
+        font-weight: 500;
+        opacity: 0;
+        transition: 0.3s;
+      }
 
-        /* Modern Toggle Switch CSS */
-        .kill-switch-container {
-            display: flex; justify-content: space-between; align-items: center;
-            background-color: var(--pill-bg); padding: 12px 16px;
-            border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border-color);
-        }
-        .kill-switch-container label { margin: 0; font-weight: 600; }
-        
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #cbd5e1; transition: .3s; border-radius: 24px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px;
-            left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%;
-        }
-        input:checked + .slider { background-color: var(--primary-btn); }
-        input:checked + .slider:before { transform: translateX(20px); }
+      .kill-switch-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--pill-bg);
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 1px solid var(--border-color);
+      }
+      .kill-switch-container label {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 24px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #cbd5e1;
+        transition: 0.3s;
+        border-radius: 24px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: var(--primary-btn);
+      }
+      input:checked + .slider:before {
+        transform: translateX(20px);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="header">
-        <button id="themeToggle" class="theme-toggle" aria-label="Toggle Theme">
-            <svg id="moonlogo" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            <svg id="sunlogo" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" style="display: none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-        </button>
-        <div class="logo-container">
-            <img src="https://www.lpu.in/authenticate/lpu%20logo.png" alt="LPU Logo">
-        </div>
-        <h3>LPU Auto Joiner</h3>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle Theme">
+        <svg
+          id="moonlogo"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+          fill="none"
+        >
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg
+          id="sunlogo"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+          fill="none"
+          style="display: none"
+        >
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      </button>
+      <div class="logo-container">
+        <img
+          src="https://www.lpu.in/authenticate/lpu%20logo.png"
+          alt="LPU Logo"
+        />
+      </div>
+      <h3>LPU Auto Joiner</h3>
     </div>
-    
+
     <div class="container">
-        <div class="kill-switch-container">
-            <label class="field-label">Enable Auto-Joiner</label>
-            <label class="switch">
-                <input type="checkbox" id="killSwitchToggle" checked>
-                <span class="slider"></span>
-            </label>
-        </div>
+      <div class="kill-switch-container">
+        <label class="field-label">Enable Auto-Joiner</label>
+        <label class="switch">
+          <input type="checkbox" id="killSwitchToggle" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
 
-        <div class="form-group">
-            <label class="field-label">Username</label>
-            <input type="text" id="username" placeholder="LPU ID">
+      <div class="form-group">
+        <label class="field-label">Username</label>
+        <input type="text" id="username" placeholder="LPU ID" />
+      </div>
+      <div class="form-group">
+        <label class="field-label">Password</label>
+        <input type="password" id="password" placeholder="••••••••" />
+      </div>
+      <div class="form-group">
+        <label class="field-label">Active Days</label>
+        <div class="days-container">
+          <label class="day-pill" title="Monday"
+            ><input type="checkbox" value="1" /><span>M</span></label
+          >
+          <label class="day-pill" title="Tuesday"
+            ><input type="checkbox" value="2" /><span>T</span></label
+          >
+          <label class="day-pill" title="Wednesday"
+            ><input type="checkbox" value="3" /><span>W</span></label
+          >
+          <label class="day-pill" title="Thursday"
+            ><input type="checkbox" value="4" /><span>T</span></label
+          >
+          <label class="day-pill" title="Friday"
+            ><input type="checkbox" value="5" /><span>F</span></label
+          >
+          <label class="day-pill" title="Saturday"
+            ><input type="checkbox" value="6" /><span>S</span></label
+          >
+          <label class="day-pill" title="Sunday"
+            ><input type="checkbox" value="0" /><span>S</span></label
+          >
         </div>
-        <div class="form-group">
-            <label class="field-label">Password</label>
-            <input type="password" id="password" placeholder="••••••••">
-        </div>
-        <div class="form-group">
-            <label class="field-label">Active Days</label>
-            <div class="days-container">
-                <label class="day-pill" title="Monday"><input type="checkbox" value="1"><span>M</span></label>
-                <label class="day-pill" title="Tuesday"><input type="checkbox" value="2"><span>T</span></label>
-                <label class="day-pill" title="Wednesday"><input type="checkbox" value="3"><span>W</span></label>
-                <label class="day-pill" title="Thursday"><input type="checkbox" value="4"><span>T</span></label>
-                <label class="day-pill" title="Friday"><input type="checkbox" value="5"><span>F</span></label>
-                <label class="day-pill" title="Saturday"><input type="checkbox" value="6"><span>S</span></label>
-                <label class="day-pill" title="Sunday"><input type="checkbox" value="0"><span>S</span></label>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="field-label">Class Time</label>
-            <input type="time" id="classTime">
-        </div>
+      </div>
+      <div class="form-group">
+        <label class="field-label">Class Time</label>
+        <input type="time" id="classTime" />
+      </div>
 
-        <button id="saveBtn" class="action-btn">Save Settings</button>
-        <div id="status">Saved Successfully</div>
+      <button id="saveBtn" class="action-btn">Save Settings</button>
+      <div id="status">Saved Successfully</div>
     </div>
     <script src="popup.js"></script>
-</body>
+  </body>
 </html>
