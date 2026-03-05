@@ -62,7 +62,6 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 function sendEmail(toEmail, classTime) {
-  // You will get these keys from your EmailJS dashboard
   const serviceID = "service_vfzyy46";
   const templateID = "template_s1bzgvt";
   const publicKey = "rhGbPW24FXeTaWsmN";
