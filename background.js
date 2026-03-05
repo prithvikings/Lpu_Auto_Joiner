@@ -80,7 +80,7 @@ function sendEmail(toEmail, classTime) {
         to_email: toEmail,
         class_time: classTime,
         message:
-          "Your LPU class is starting now. The Auto-Joiner has automatically opened the portal on your computer!",
+          "Your LPU class is starting now. Please join it as fast as possible",
       },
     }),
   })
