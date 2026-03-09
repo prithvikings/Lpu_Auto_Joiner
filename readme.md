@@ -1,202 +1,68 @@
-# 🎓 LPU Auto Joiner — Chrome Extension
+# LPU Auto Joiner
 
-A Chrome extension that **automatically logs you into** the LPU (Lovely Professional University) student portal and navigates to your class meetings at your scheduled time. Set it once, and never miss a class again.
-
----
-
-## ✨ Features
-
-- **⏰ Scheduled Auto-Join** — Automatically opens the LPU portal at your configured class time.
-- **🔐 Auto-Login** — Fills in your credentials and logs you in without any manual input.
-- **📅 Day Selection** — Choose specific days of the week when classes are scheduled.
-- **🔔 Notifications** — Sends a browser notification when it's time for class.
-- **📧 Email Notifications** — Optionally receive an email alert when your class is about to start (powered by EmailJS).
-- **🎨 Dark / Light Theme** — Toggle between dark and light mode with a single click.
-- **🛑 Kill Switch** — Quickly enable or disable the extension without uninstalling it.
-- **💾 Persistent Settings** — All your settings are saved locally and restored automatically.
+A Chrome extension that automatically logs into the LPU CodeTantra portal and joins your scheduled classes without any manual interaction.
 
 ---
 
-## 📸 Preview
+## How it works
 
-| Light Mode                                  | Dark Mode                                       |
-| ------------------------------------------- | ----------------------------------------------- |
-| Clean, modern interface with orange accents | Sleek dark theme that follows system preference |
-
----
-
-## 🚀 Installation
-
-### Load as an Unpacked Extension (Developer Mode)
-
-1. **Download or Clone** this repository:
-
-   ```bash
-   git clone https://github.com/your-username/lpu-auto-join.git
-   ```
-
-2. Open **Google Chrome** and navigate to:
-
-   ```
-   chrome://extensions/
-   ```
-
-3. Enable **Developer mode** (toggle in the top-right corner).
-
-4. Click **"Load unpacked"** and select the `lpu-auto-join` folder.
-
-5. The extension icon will appear in your Chrome toolbar. Pin it for easy access.
+- The extension runs a background service worker that fetches today's class schedule from the CodeTantra meetings API on startup and every hour.
+- For each upcoming class, a precise Chrome alarm is set using the exact `scheduledStartTime` from the API response — no manual time configuration needed.
+- When an alarm fires, the extension opens a new tab directly to the join URL (`jnr.jsp?m=<meetingId>`). The platform auto-joins the meeting on page load.
+- If you are not logged in when the tab opens, the extension detects the redirect to the login page, fills in your credentials, submits the form, and then navigates to the join URL after login completes.
+- After the first successful login and schedule fetch, the extension sends the full schedule back to the background service worker so alarms are set for all remaining classes that day.
+- The schedule is cached in local storage with the date it was fetched. It is not re-fetched until the next day or until you manually refresh from the popup.
 
 ---
 
-## ⚙️ Usage
+## Features
 
-1. **Click** the extension icon in your Chrome toolbar to open the popup.
-
-2. **Enable the Auto-Joiner** using the toggle switch at the top.
-
-3. **Enter your credentials:**
-   - **Username** — Your LPU student ID
-   - **Password** — Your LPU portal password
-
-4. **Select Active Days** — Click on the day pills (M, T, W, T, F, S, S) to mark which days you have classes.
-
-5. **Set Class Time** — Use the time picker to set when your class starts.
-
-6. **Add Notification Email (Optional)** — Enter your email address to receive an email alert when your class is about to start.
-
-7. **Click "Save Settings"** — A confirmation message will appear.
-
-That's it! The extension will now:
-
-- Check every minute if it's time for class.
-- Open the LPU portal automatically within a 3-minute window of your scheduled time.
-- Log you in and navigate to the meetings page.
-- Send you an email notification if you've provided an email address.
+- Automatic login using saved credentials.
+- Schedule fetched directly from the API — no need to manually set class days or times.
+- One precise alarm per class, fired at the exact scheduled start time.
+- Redirect loop prevention using `sessionStorage` flags so the login and join flow each only run once per tab.
+- Popup shows today's full class schedule with start times and live status (Scheduled, Started, Ended).
+- Manual refresh button in the popup to force a fresh schedule fetch.
+- Kill switch toggle to disable all automation instantly.
+- Optional email notification via EmailJS when a class alarm fires.
 
 ---
 
-## 📁 Project Structure
+## Limitations
 
-```
-lpu-auto-join/
-├── manifest.json      # Extension configuration and permissions
-├── background.js      # Background service worker (alarm-based scheduler)
-├── content.js         # Content script (auto-login and navigation logic)
-├── popup.html         # Extension popup UI (settings panel)
-├── popup.js           # Popup interaction logic (save/load settings, theme toggle)
-├── logo.png           # Extension icon
-└── readme.md          # Documentation
-```
+- Chrome must be open for alarms to fire. The extension cannot run when Chrome is closed.
+- If you open Chrome after a class has already started, the extension will not auto-join that class. Alarms that fire in the past are not replayed.
+- Only classes with `status: started` are joined when navigating through the calendar page. Scheduled classes are handled by their alarms.
 
 ---
 
-## 🔍 How It Works
+## Setup
 
-The extension operates through three main components:
-
-### 1. Background Service Worker (`background.js`)
-
-- Creates a **Chrome Alarm** (`scheduleChecker`) that fires every **1 minute**.
-- On each alarm tick, it:
-  - Checks if the extension is enabled (kill switch).
-  - Retrieves the saved schedule (days + time + email) from `chrome.storage.local`.
-  - Compares the current day and time against the saved schedule.
-  - If the current time is within a **3-minute window** of the scheduled class time and on a matching day, it:
-    - Sends a **browser notification** ("Time for class!").
-    - Opens a **new tab** to `https://myclass.lpu.in/`.
-    - Sends an **email notification** via EmailJS (if an email address is configured).
-  - Uses a `lastTriggered` key to prevent duplicate triggers on the same day/time.
-
-### 2. Content Script (`content.js`)
-
-- Runs on pages matching `*.lpu.in/*` and `*.codetantra.com/*`.
-- When the LPU login page loads (`myclass.lpu.in`):
-  - Retrieves stored credentials from `chrome.storage.local`.
-  - Auto-fills the **username** and **password** fields.
-  - Clicks the **login button** automatically.
-- After login, when on the dashboard:
-  - Looks for the **Meetings** navigation link (`/secure/tla/m.jsp`).
-  - Automatically navigates to the meetings page.
-- If already on the meetings page, it does nothing (avoids redirect loops).
-
-### 3. Popup UI (`popup.html` + `popup.js`)
-
-- Provides a clean settings interface with:
-  - **Toggle switch** to enable/disable the extension.
-  - **Text inputs** for username and password.
-  - **Day picker** with circular pill buttons for selecting active days.
-  - **Email input** (optional) for receiving email notifications.
-  - **Time picker** for setting class time.
-  - **Save button** that persists all settings to `chrome.storage.local`.
-- **Theme toggle** (sun/moon icon) to switch between light and dark mode.
-- Loads saved settings on popup open and restores the UI state.
+1. Go to `chrome://extensions` and enable Developer Mode.
+2. Click "Load unpacked" and select this folder.
+3. Open the extension popup and enter your LPU username and password.
+4. Optionally enter an email address to receive a notification when a class alarm fires.
+5. Click Save. Open the CodeTantra portal once so the extension can log in and fetch the schedule.
 
 ---
 
-## 🔒 Permissions Explained
+## Storage keys
 
-| Permission               | Why It's Needed                                                    |
-| ------------------------ | ------------------------------------------------------------------ |
-| `alarms`                 | To create a recurring 1-minute timer that checks the schedule.     |
-| `storage`                | To save and retrieve user settings (credentials, schedule, theme). |
-| `tabs`                   | To open a new tab to the LPU portal when it's class time.          |
-| `notifications`          | To send a browser notification when the class is about to start.   |
-| `*://*.lpu.in/*`         | Host permission to run the content script on LPU portal pages.     |
-| `*://*.codetantra.com/*` | Host permission to run the content script on CodeTantra pages.     |
-
----
-
-## 🛡️ Privacy & Security
-
-- **All data is stored locally** on your machine using `chrome.storage.local`.
-- Your credentials are only used to auto-fill the login form on `myclass.lpu.in` and are never transmitted elsewhere.
-- If you provide a notification email, it is only used to send class reminders via the **EmailJS** service. No other data is shared.
-- The extension only activates on LPU and CodeTantra domains.
+| Key | Description |
+|---|---|
+| `username` | LPU login ID |
+| `password` | LPU password |
+| `userEmail` | Optional notification email |
+| `isExtensionEnabled` | Kill switch state |
+| `cachedSchedule` | Array of today's meetings from the API |
+| `cachedScheduleDate` | Date string of when the schedule was last fetched |
+| `pendingMeetingId` | Meeting ID stored by the alarm, cleared after joining |
 
 ---
 
-## 🛠️ Tech Stack
+## Debugging
 
-- **Manifest V3** — Latest Chrome Extension architecture
-- **Vanilla JavaScript** — No frameworks or dependencies
-- **HTML & CSS** — Clean, responsive popup UI with CSS custom properties
-- **Google Fonts (Poppins)** — Modern typography
-- **EmailJS** — Email delivery service for class notifications
-
----
-
-## 🐛 Troubleshooting
-
-| Issue                             | Solution                                                                                                                                                                                                |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Extension doesn't open the portal | Make sure the toggle is **enabled** and you've selected the correct **days** and **time**.                                                                                                              |
-| Auto-login doesn't work           | Verify your **username** and **password** are correct. The extension looks for specific input field selectors on the LPU page — if LPU changes their login page structure, selectors may need updating. |
-| Notification not showing          | Ensure Chrome notifications are **allowed** in your system settings.                                                                                                                                    |
-| Email notification not received   | Double-check the email address you entered. Also check your **spam/junk** folder. The email is sent via EmailJS and may take a moment to arrive.                                                        |
-| Triggers multiple times           | This shouldn't happen due to the `lastTriggered` guard, but try reloading the extension from `chrome://extensions/`.                                                                                    |
-| Theme doesn't persist             | Make sure the extension has `storage` permission. Reload the extension if needed.                                                                                                                       |
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-<p align="center">
-  Made with ❤️ for LPU Students
-</p>
+- Open `chrome://extensions` and click the **service worker** link under the extension to open the background console.
+- Run `chrome.storage.local.get(null, console.log)` in that console to inspect all stored data.
+- Run `chrome.alarms.getAll(console.log)` to see all scheduled class alarms with their fire timestamps.
+- Content script logs appear in the DevTools console on the CodeTantra/LPU pages.

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "LPU Auto Joiner",
+  "name": "LPU Auto Joiner v2",
   "version": "1.0",
   "description": "Automatically logs into the LPU student portal and joins your scheduled classes on time. Set your credentials, pick your days and time, and never miss a class again.",
   "icons": {
