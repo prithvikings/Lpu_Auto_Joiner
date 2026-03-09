@@ -140,14 +140,6 @@
         outline: none;
       }
 
-      input[type="time"]::-webkit-calendar-picker-indicator {
-        cursor: pointer;
-        transition: 0.2s;
-      }
-      body[data-theme="dark"]
-        input[type="time"]::-webkit-calendar-picker-indicator {
-        filter: invert(1) opacity(0.8);
-      }
       input:focus {
         border-color: var(--accent-orange);
         box-shadow: 0 0 0 3px var(--accent-orange-focus);
@@ -209,6 +201,90 @@
         font-weight: 500;
         opacity: 0;
         transition: 0.3s;
+      }
+
+      .schedule-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .schedule-header label.field-label {
+        margin: 0;
+      }
+      #refreshBtn {
+        background: none;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-size: 12px;
+        font-family: "Poppins", sans-serif;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      #refreshBtn:hover {
+        border-color: var(--accent-orange);
+        color: var(--accent-orange);
+      }
+      #scheduleList {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .class-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background-color: var(--pill-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 13px;
+      }
+      .class-time {
+        font-weight: 600;
+        color: var(--accent-orange);
+        min-width: 48px;
+        font-size: 12px;
+      }
+      .class-title {
+        flex: 1;
+        color: var(--text-main);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .class-badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 100px;
+        flex-shrink: 0;
+      }
+      .badge-started {
+        background-color: rgba(40, 167, 69, 0.15);
+        color: #28a745;
+      }
+      .badge-scheduled {
+        background-color: rgba(83, 90, 97, 0.12);
+        color: var(--text-secondary);
+      }
+      .badge-ended {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+      }
+      .schedule-empty {
+        font-size: 13px;
+        color: var(--text-secondary);
+        text-align: center;
+        padding: 14px 0;
+      }
+      .schedule-updated {
+        font-size: 11px;
+        color: var(--text-secondary);
+        text-align: right;
+        margin-top: 6px;
       }
 
       .kill-switch-container {
@@ -325,38 +401,17 @@
         <input type="password" id="password" placeholder="••••••••" />
       </div>
       <div class="form-group">
-        <label class="field-label">Active Days</label>
-        <div class="days-container">
-          <label class="day-pill" title="Monday"
-            ><input type="checkbox" value="1" /><span>M</span></label
-          >
-          <label class="day-pill" title="Tuesday"
-            ><input type="checkbox" value="2" /><span>T</span></label
-          >
-          <label class="day-pill" title="Wednesday"
-            ><input type="checkbox" value="3" /><span>W</span></label
-          >
-          <label class="day-pill" title="Thursday"
-            ><input type="checkbox" value="4" /><span>T</span></label
-          >
-          <label class="day-pill" title="Friday"
-            ><input type="checkbox" value="5" /><span>F</span></label
-          >
-          <label class="day-pill" title="Saturday"
-            ><input type="checkbox" value="6" /><span>S</span></label
-          >
-          <label class="day-pill" title="Sunday"
-            ><input type="checkbox" value="0" /><span>S</span></label
-          >
-        </div>
-      </div>
-      <div class="form-group">
         <label class="field-label">Notification Email (Optional)</label>
         <input type="email" id="userEmail" placeholder="student@example.com" />
       </div>
+
       <div class="form-group">
-        <label class="field-label">Class Time</label>
-        <input type="time" id="classTime" />
+        <div class="schedule-header">
+          <label class="field-label">Today's Schedule</label>
+          <button id="refreshBtn">↻ Refresh</button>
+        </div>
+        <div id="scheduleList"><div class="schedule-empty">Loading...</div></div>
+        <div class="schedule-updated" id="scheduleUpdated"></div>
       </div>
 
       <button id="saveBtn" class="action-btn">Save Settings</button>
